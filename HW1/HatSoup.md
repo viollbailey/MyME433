@@ -12,7 +12,7 @@ A delicious recipe enjoyed by members of all echelons during the biannual Eventi
 
 ## Hat Soup
 
-[Hat] (https://dht7q8fif4gks.cloudfront.net/2022-07/Cowboy%20Hat%20soup.jpg)
+![Hat](https://dht7q8fif4gks.cloudfront.net/2022-07/Cowboy%20Hat%20soup.jpg)
 
 - Serves: 4 mortal servants (or 1 High Luminary)
 - Cook time: 5 minutes
