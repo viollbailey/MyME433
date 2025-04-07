@@ -14,30 +14,30 @@ A delicious recipe enjoyed by members of all echelons during the biannual Eventi
 
 ![Hat](https://dht7q8fif4gks.cloudfront.net/2022-07/Cowboy%20Hat%20soup.jpg)
 
-- Serves: 4 mortal servants (or 1 High Luminary)
+- Serves: 4 mortal servants (or 1 **High Luminary**)
 - Cook time: 5 minutes
 
 ### Ingredients
 - 1 Hat of a preferred organization
-- 2 cups bone broth (given freely)
-- 1/2 teaspoon salt
-- 1 whole durian
-- 1/4 pinch of oregano
-- 1/2 Onion
-- 1/2 teaspoon salt
-- 1 cup of artificial tofu substitute
+- 2 Cups bone broth (given freely)
+- 1/2 Teaspoon salt
+- 1 Whole durian
+- 1/4 Pinch of oregano
+- 1/2 _Onion_
+- 1/2 Teaspoon salt
+- 1 Cup of artificial tofu substitute
 - 1 lb of Chettle
-- 1/2 teaspoon salt
-- 1 egg
-- 1 cup mini chocolate chips
-- 3 teaspoons salt
+- 1/2 Teaspoon salt
+- 1 Egg
+- 1 Cup mini chocolate chips
+- 3 Teaspoons salt
 - 1 Hat of an unpreferred organization
 
 ### Instructions
 1. Read the scriptures and memorize thine daily affirmations.
 2. Kneels before thy holy shrines and give thanks.
-3. Venerate the onion.
-4. Slice the hat of the sinful organization into the pattern of the Holy Origram that its corrupt essence may once again be wrought pure by the spirits of the Earth..
+3. Venerate the _Onion_.
+4. Slice the hat of the sinful organization into the pattern of the current **Holy Origram** (as foreseen by _Bob's Guide to Celestial Movements and Tap Dance, pg.2008_) that its corrupt essence may once again be wrought pure by the spirits of the Aether.
 5. Mix all ingredients into the hat of the preferred organization.
 6. Bake for 6 minutes.
 
