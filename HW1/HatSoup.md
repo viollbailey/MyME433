@@ -37,9 +37,10 @@ A delicious recipe enjoyed by members of all echelons during the biannual Eventi
 1. Read the scriptures and memorize thine daily affirmations.
 2. Kneel before thy holy shrines and give thanks.
 3. Venerate the _Onion_.
-4. Slice the hat of the sinful organization into the pattern of the current **Holy Origram** (as foreseen by _Bob's Guide to Celestial Movements and Tap Dance, pg.2008_) that its corrupt essence may once again be wrought pure by the spirits of the Aether.
-5. Mix all ingredients into the hat of the preferred organization.
-6. Bake for 6 minutes.
+4. Remove the head(s) from the preferred hat.
+5. Slice the hat of the sinful organization into the pattern of the current **Holy Origram** (as foreseen by _Bob's Guide to Celestial Movements and Tap Dance, pg.2008_) that its corrupt essence may once again be wrought pure by the spirits of the Aether.
+6. Mix all ingredients into the hat of the preferred organization.
+7. Bake for 6 minutes.
 
 Season's blessings be upon ye!
 
