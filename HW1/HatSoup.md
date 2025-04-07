@@ -31,7 +31,7 @@ A delicious recipe enjoyed by members of all echelons during the biannual Eventi
 - 1 Egg
 - 1 Cup mini chocolate chips
 - 3 Teaspoons salt
-- 1 Hat of an unpreferred organization
+- 1 Hat of a ~~sinful~~ unpreferred organization
 
 ### Instructions
 1. Read the scriptures and memorize thine daily affirmations.
