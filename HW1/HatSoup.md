@@ -6,6 +6,9 @@ layout: default
 <!---
 Violet Bailey. I sure hope these recipes don't need to be real things
 -->
+
+![Hat] (https://dht7q8fif4gks.cloudfront.net/2022-07/Cowboy%20Hat%20soup.jpg)
+
 A delicious recipe enjoyed by members of all echelons during the biannual Eventide festival at The Compound, this classic meal is easy to prepare and 
 
 ### Ingredients
