@@ -12,11 +12,15 @@ A delicious recipe enjoyed by members of all echelons during the biannual Eventi
 
 ## Hat Soup
 
+### Large Image
 ![Hat] (https://dht7q8fif4gks.cloudfront.net/2022-07/Cowboy%20Hat%20soup.jpg)
 
+- Serves: 4 mortal servants (or 1 High Luminary)
+- Cook time: 5 minutes
+
 ### Ingredients
-- 2 teaspoons baking powder
-- 1/4 teaspoon baking soda
+- 1 Hat of a preferred sports team
+- 2 cups bone broth (given freely)
 - 1/2 teaspoon salt
 - 1/2 teaspoon xanthan gum
 - 1/2 teaspoon cinnamon
@@ -38,7 +42,7 @@ A delicious recipe enjoyed by members of all echelons during the biannual Eventi
 6. Add the batter to the pan.
 7. Bake for 25 to 30 minutes.
 
-Enjoy!
+Season's blessings be upon ye!
 
 <!--
 Keep this link to return to the index
