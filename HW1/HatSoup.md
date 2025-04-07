@@ -2,14 +2,17 @@
 layout: default
 ---
 
-## Violet's Gluten Free, Low Sodium*, Vegan, "All-Natural", Organic Hat Soup
+# Violet's Gluten Free, Low Sodium*, Vegan, "All-Natural", Organic Hat Soup
 <!---
 Violet Bailey. I sure hope these recipes don't need to be real things
 -->
 
-![Hat] (https://dht7q8fif4gks.cloudfront.net/2022-07/Cowboy%20Hat%20soup.jpg)
 
-A delicious recipe enjoyed by members of all echelons during the biannual Eventide festival at The Compound, this classic meal is easy to prepare and 
+A delicious recipe enjoyed by members of all echelons during the biannual Eventide festival at The Compound, this classic meal is easy to prepare using nothing more than local vegetables and last season's vestments. Enjoy with any of your favorite sides or offerings.
+
+## Hat Soup
+
+![Hat] (https://dht7q8fif4gks.cloudfront.net/2022-07/Cowboy%20Hat%20soup.jpg)
 
 ### Ingredients
 - 2 teaspoons baking powder
