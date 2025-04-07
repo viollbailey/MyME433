@@ -18,28 +18,28 @@ A delicious recipe enjoyed by members of all echelons during the biannual Eventi
 - Cook time: 5 minutes
 
 ### Ingredients
-- 1 Hat of a preferred sports team
+- 1 Hat of a preferred organization
 - 2 cups bone broth (given freely)
 - 1/2 teaspoon salt
-- 1/2 teaspoon xanthan gum
-- 1/2 teaspoon cinnamon
-- 1/2 cup almond flour
-- 1/2 cup coconut flour
-- 3/4 cup genral purpose gluten free flour
-- 1/2 cup butter
-- 2/3 cup sugar
-- 2 eggs
-- 4 ripe bananas
+- 1 whole durian
+- 1/4 pinch of oregano
+- 1/2 Onion
+- 1/2 teaspoon salt
+- 1 cup of artificial tofu substitute
+- 1 lb of Chettle
+- 1/2 teaspoon salt
+- 1 egg
 - 1 cup mini chocolate chips
+- 3 teaspoons salt
+- 1 Hat of an unpreferred organization
 
 ### Instructions
-1. Preheat oven to 375F. Grease muffin pan.
-2. Mix together the dry ingredients: baking powder, baking soda, xanthum gum, salt, cinnamon, and flours.
-3. Fold in the butter, sugar, and bananas.
-4. Beat in the eggs.
-5. Stir in the chocolate chips.
-6. Add the batter to the pan.
-7. Bake for 25 to 30 minutes.
+1. Read the scriptures and memorize thine daily affirmations.
+2. Kneels before thy holy shrines and give thanks.
+3. Venerate the onion.
+4. Slice the hat of the sinful organization into the pattern of the Holy Origram that its corrupt essence may once again be wrought pure by the spirits of the Earth..
+5. Mix all ingredients into the hat of the preferred organization.
+6. Bake for 6 minutes.
 
 Season's blessings be upon ye!
 
