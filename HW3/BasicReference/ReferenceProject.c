@@ -2,9 +2,9 @@
 #include "pico/stdlib.h"
 #include "hardware/adc.h" // For calling adc functions on the module, remember adding to the makelist linked libraries!
 
-#define ADCPIN_NUM 26
-#define LEDOUTPIN_NUM 20
-#define BUTTONPIN_NUM 10
+#define ADCPIN_NUM 26 //GP#s for the pins
+#define LEDOUTPIN_NUM 10
+#define BUTTONPIN_NUM 20
 
 int buttonVal = 0; //For reading the value of the input pin
 
@@ -33,12 +33,15 @@ int main()
         sleep_ms(100);
     }
 
-    printf("Start! LED has been turned on\n");
+    printf("Start!\n");
 
     gpio_put(LEDOUTPIN_NUM, 1); // Turns the LED on
 
-    while(!gpio_get(BUTTONPIN_NUM)){
-        ; // Waiting until a button has been pressed
+    printf("LED has been turned on\n");
+    int buttonVal = 0;
+
+    while(!buttonVal){
+        buttonVal = gpio_get(BUTTONPIN_NUM); // Waiting until a button has been pressed
     }
 
     printf("LED has been turned off\n");
@@ -46,13 +49,16 @@ int main()
 
     // Loop for asking for samples
     int sampleNumber = 0;
+    float voltValue = 0;
 
     while (true) {
-        printf("Enter a number of analog samples to take (between 1 and 100): ");
-        scanf("%d", sampleNumber);
+        printf("Enter a number of analog samples to take (between 1 and 100):\n");
+        scanf("%d", &sampleNumber);
+        printf("%d\n", sampleNumber);
         for (int i = 0; i < sampleNumber; i++){
             uint16_t result = adc_read(); // Reading ADC as 12 bit number
-            printf("Sample %d: %d\r\n", i, result);
+            voltValue = (float) 3.3 * result / (4095); // Converting to voltage
+            printf("Sample %d: %.2f V\r\n", i, voltValue);
             sleep_ms(10); // Wait 10 ms for a frequency of 1/0.01 = 100 Hz
         }
         sleep_ms(1000);
