@@ -69,7 +69,12 @@ void writeDAC(int channel, float voltage){
     uint8_t data[2];
     int len = 2;
 
+    // Data should look like 0bc111vvvv and 0bvvvvvv00;
+    // c is the Channel (0 = A, 1 = B)
+    // vvv... is the 10 bit unsigned int representing the voltage
+
     /*
+    v = v >>
     data[0] = 0;
     data[0] = data[0] | (channel<<7);
     data[0] = data[0] | (0b111<<4);
