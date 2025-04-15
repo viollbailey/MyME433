@@ -49,14 +49,17 @@ int main()
     float v2 = 0; // Voltage tracker triangle wave;
 
     while(1){
+        
+        /* // Troubleshooting
         printf("I'm doing stuff\n");
         sleep_ms(500);
-        
+        */ 
+
         // Main block for writing
-        for(int i = 0; i < 100; i++){
+        for(int i = 0; i < 99; i++){
             sleep_ms(10); // Update rate needs to be 50 times faster than freq, so 100 Hz should work (10ms update time)
             t = t + 0.01; //Increment time by time
-            x = x++; // Increment cycle by 1
+            x++; // Increment cycle by 1
             
             // For Channel A, generating a 2Hz sin wave
             v1 = sin(2 * M_PI * 2 * t); // Loops twice a second
@@ -65,7 +68,7 @@ int main()
             
             // For Channel B, generating a 1Hz triangle wave
             
-            v2 = (float) abs(x - 50); //Triangle wave with a freq. of 1 sec, going from 50 to 0 to 50
+            v2 = abs(x - 50); //Triangle wave with a freq. of 1 sec, going from 50 to 0 to 50
             v2 = 1023 * v2 / 50; // Scaling amplitude to 0 to 1023
             writeDAC(1,v2); // Writing to VOutB
 
