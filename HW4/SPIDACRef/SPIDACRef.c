@@ -15,7 +15,7 @@ int main()
 #else
    
     // Initializing the SPI
-    spi_init(spi_default, 1000 * 1000); // the baud, or bits per second
+    spi_init(spi_default, 12000); // the baud, or bits per second. Want it to be slow for debugging
     gpio_set_function(PICO_DEFAULT_SPI_RX_PIN, GPIO_FUNC_SPI);
     gpio_set_function(PICO_DEFAULT_SPI_SCK_PIN, GPIO_FUNC_SPI);
     gpio_set_function(PICO_DEFAULT_SPI_TX_PIN, GPIO_FUNC_SPI);
@@ -28,9 +28,9 @@ int main()
 
     /* SPI data written with the following
     
-    cs_select(PIN_CS);
+    cs_select(PICO_DEFAULT_SPI_CSN_PIN); //Makes the chip select pin go low, activating it
     spi_write_blocking(SPI_PORT, data, len); // where data is a uint8_t array with length len
-    cs_deselect(PIN_CS);
+    cs_deselect(PICO_DEFAULT_SPI_CSN_PIN); // Makes the chip select pin go high, disabling it
     
     */
    
