@@ -56,7 +56,6 @@ int main()
         */ 
 
         // Main block for writing
-        /*
         for(int i = 0; i < 99; i++){
             sleep_ms(10); // Update rate needs to be 50 times faster than freq, so 100 Hz should work (10ms update time)
             t = t + 0.01; //Increment time by time
@@ -76,7 +75,6 @@ int main()
         }
         t = 0; // Reset time and cycle trackers
         x = 0; 
-        */
        // writeDAC(0,0); // Hard code testing 
     }
 
