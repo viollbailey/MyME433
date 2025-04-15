@@ -42,7 +42,7 @@ pico_set_program_version(DACRef "0.1")
 
 # Modify the below lines to enable/disable output over UART/USB
 pico_enable_stdio_uart(DACRef 0)
-pico_enable_stdio_usb(DACRef 0)
+pico_enable_stdio_usb(DACRef 1)
 
 # Add the standard library to the build
 target_link_libraries(DACRef

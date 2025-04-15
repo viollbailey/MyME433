@@ -42,22 +42,36 @@ int main()
     gpio_put(PICO_DEFAULT_SPI_CSN_PIN, 1);
     gpio_set_dir(PICO_DEFAULT_SPI_CSN_PIN, GPIO_OUT);
    
-    float t = 0; // Time tracker
-    float v = 0; // Voltage tracker
+    float t = 0; // Time tracker for sine wave
+    int x = 0; // Cycle tracker for triangle wave
+    float v1 = 0; // Voltage tracker for sine wave
+    float v2 = 0; // Voltage tracker triangle wave;
 
     while(1){
-        printf("I'm doing stuff");
+        printf("I'm doing stuff\n");
         sleep_ms(500);
         
-        /* Main block for writing
+        // Main block for writing
         for(int i = 0; i < 100; i++){
             sleep_ms(10); // Update rate needs to be 50 times faster than freq, so 100 Hz should work (10ms update time)
-            t = t + 0.1;
-            v = 3.3 * (sin(t) + 1) / 1024;
-            writeDAC(0,v);
+            t = t + 0.01; //Increment time by time
+            x = x++; // Increment cycle by 1
+            
+            // For Channel A, generating a 2Hz sin wave
+            v1 = sin(2 * M_PI * 2 * t); // Loops twice a second
+            v1 = 1023 * (v1 + 1) / 2; // changes the -1 to 1 sin wave to a sin wave going from 0 to 1023
+            writeDAC(0,v1); // Writing to VOutA
+            
+            // For Channel B, generating a 1Hz triangle wave
+            
+            v2 = (float) abs(x - 50); //Triangle wave with a freq. of 1 sec, going from 50 to 0 to 50
+            v2 = 1023 * v2 / 50; // Scaling amplitude to 0 to 1023
+            writeDAC(1,v2); // Writing to VOutB
+
         }
-        */
-       writeDAC(0,0); // Hard code testing 
+        t = 0; // Reset time and cycle trackers
+        x = 0; 
+       // writeDAC(0,0); // Hard code testing 
     }
 
     return 0;
@@ -69,20 +83,30 @@ void writeDAC(int channel, float voltage){
     uint8_t data[2];
     int len = 2;
 
+    
+    
     // Data should look like 0bc111vvvv and 0bvvvvvv00;
     // c is the Channel (0 = A, 1 = B)
     // vvv... is the 10 bit unsigned int representing the voltage
+    // Note that voltage goes from 0 up to 1023 as the maximum
 
-    /*
-    v = v >>
+
+    uint volt = voltage; // Need to convert to an int to get the right bits
+
     data[0] = 0;
-    data[0] = data[0] | (channel<<7);
-    data[0] = data[0] | (0b111<<4);
-    data[0] = data[0] | ();
-    data[1] = 255;
+    data[0] = data[0] | (channel<<7); // Setting channel to the leftmost bit
+    data[0] = data[0] | (0b111<<4); // Setting default 111 to next 3 bits
+    data[0] = data[0] | (volt>>6); // Setting the last 4 bits in data[0] to the first 4 bits of voltage 
+    
+    data[1] = 0b11111111;
+    data[1] = data[1] & (volt<<2); // Setting the first 6 bits of data to the last 6 bits of the voltage and the next 2 bits to 0
+
+
+    /* Hard coding test
+    data[0] = 0b01111000;
+    data[1] = 0b00000000;
     */
-    data[0] = 0b01010101;
-    data[1] = 255;
+
     cs_select(PICO_DEFAULT_SPI_CSN_PIN); //Makes the chip select pin go low, activating it
     spi_write_blocking(spi_default, data, len); // where data is a uint8_t array with length len
     cs_deselect(PICO_DEFAULT_SPI_CSN_PIN); // Makes the chip select pin go high, disabling it
