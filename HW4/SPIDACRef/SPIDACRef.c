@@ -7,11 +7,31 @@
 int main()
 {
     stdio_init_all();
+
+    // Make sure the defaults are defined properly
+    #if !defined(spi_default) || !defined(PICO_DEFAULT_SPI_SCK_PIN) || !defined(PICO_DEFAULT_SPI_TX_PIN) || !defined(PICO_DEFAULT_SPI_RX_PIN) || !defined(PICO_DEFAULT_SPI_CSN_PIN)
+#warning spi/spi_flash example requires a board with SPI pins
+    puts("Default SPI pins were not defined");
+#else
    
     // Initializing the SPI
     spi_init(spi_default, 1000 * 1000); // the baud, or bits per second
     gpio_set_function(PICO_DEFAULT_SPI_RX_PIN, GPIO_FUNC_SPI);
     gpio_set_function(PICO_DEFAULT_SPI_SCK_PIN, GPIO_FUNC_SPI);
     gpio_set_function(PICO_DEFAULT_SPI_TX_PIN, GPIO_FUNC_SPI);
+    // Above pins are default pins on the bottom right of the PICO
 
+    // Chip select is active-low, so we'll initialise it to a driven-high state
+    gpio_init(PICO_DEFAULT_SPI_CSN_PIN);
+    gpio_put(PICO_DEFAULT_SPI_CSN_PIN, 1);
+    gpio_set_dir(PICO_DEFAULT_SPI_CSN_PIN, GPIO_OUT);
+
+    /* SPI data written with the following
+    
+    cs_select(PIN_CS);
+    spi_write_blocking(SPI_PORT, data, len); // where data is a uint8_t array with length len
+    cs_deselect(PIN_CS);
+    
+    */
+   
 }
