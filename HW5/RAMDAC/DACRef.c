@@ -43,17 +43,63 @@ int main()
     gpio_put(PICO_DEFAULT_SPI_CSN_PIN, 1);
     gpio_set_dir(PICO_DEFAULT_SPI_CSN_PIN, GPIO_OUT);
    
+
+    /* for doing waves
     float t = 0; // Time tracker for sine wave
     int x = 0; // Cycle tracker for triangle wave
     float v1 = 0; // Voltage tracker for sine wave
     float v2 = 0; // Voltage tracker triangle wave;
+    */
 
+    //testing clock timing
+    volatile float f1, f2;
+    printf("Enter two floats to use:");
+    scanf("%f %f", &f1, &f2);
+    volatile float f_add, f_sub, f_mult, f_div;
+    absolute_time_t t1 = get_absolute_time();    
+    for (int i = 0; i < 1000; i++){
+        f_add = f1+f2;
+    }
+    absolute_time_t t2 = get_absolute_time();    
+    uint64_t t = to_us_since_boot(t2 - t1);
+    t = t * 150 / 1000;
+    printf("t add = %llu\n", t);
+
+    t1 = get_absolute_time();    
+    for (int i = 0; i < 1000; i++){
+        f_sub = f1-f2;
+    }
+    t2 = get_absolute_time();    
+    t = to_us_since_boot(t2 - t1);
+    t = t * 150 / 1000;
+    printf("t sub = %llu\n", t);
+
+    t1 = get_absolute_time();    
+    for (int i = 0; i < 1000; i++){
+        f_mult = f1*f2;
+    }
+    t2 = get_absolute_time();    
+    t = to_us_since_boot(t2 - t1);
+    t = t * 150 / 1000;
+    t1 = get_absolute_time();    
+    printf("t mult = %llu\n", t);
+
+    for (int i = 0; i < 1000; i++){
+        f_div = f1/f2;
+    }
+    t2 = get_absolute_time();    
+    t = to_us_since_boot(t2 - t1);
+    t = t * 150 / 1000;
+    printf("t div = %llu\n", t);
+    printf("\nResults: \n%f+%f=%f \n%f-%f=%f \n%f*%f=%f \n%f/%f=%f\n", f1,f2,f_add, f1,f2,f_sub, f1,f2,f_mult, f1,f2,f_div);
+
+    /*
     while(1){
         
         /* // Troubleshooting
         printf("I'm doing stuff\n");
         sleep_ms(500);
-        */ 
+         
 
         // Main block for writing
         for(int i = 0; i < 99; i++){
@@ -77,7 +123,7 @@ int main()
         x = 0; 
        // writeDAC(0,0); // Hard code testing 
     }
-
+    */
     return 0;
 #endif
 }
