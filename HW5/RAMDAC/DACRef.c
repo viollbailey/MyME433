@@ -52,6 +52,7 @@ int main()
     */
 
     //testing clock timing
+    while (1){
     volatile float f1, f2;
     printf("Enter two floats to use:");
     scanf("%f %f", &f1, &f2);
@@ -61,38 +62,39 @@ int main()
         f_add = f1+f2;
     }
     absolute_time_t t2 = get_absolute_time();    
-    uint64_t t = to_us_since_boot(t2 - t1);
-    t = t * 150 / 1000;
-    printf("t add = %llu\n", t);
+    uint64_t t_add = to_us_since_boot(t2-t1);
+    t_add = t_add * 150 / 1000;
+    printf("t add = %llu\n", t_add);
 
-    t1 = get_absolute_time();    
+    absolute_time_t t3 = get_absolute_time();    
     for (int i = 0; i < 1000; i++){
         f_sub = f1-f2;
     }
-    t2 = get_absolute_time();    
-    t = to_us_since_boot(t2 - t1);
-    t = t * 150 / 1000;
-    printf("t sub = %llu\n", t);
+    absolute_time_t t4 = get_absolute_time();    
+    uint64_t t_sub = to_us_since_boot(t4-t3);
+    t_sub = t_sub * 150 / 1000;
+    printf("t sub = %llu\n", t_sub);
 
-    t1 = get_absolute_time();    
+    absolute_time_t t5 = get_absolute_time();    
     for (int i = 0; i < 1000; i++){
-        f_mult = f1*f2;
+        f_add = f1 * f2;
     }
-    t2 = get_absolute_time();    
-    t = to_us_since_boot(t2 - t1);
-    t = t * 150 / 1000;
-    t1 = get_absolute_time();    
-    printf("t mult = %llu\n", t);
+    absolute_time_t t6 = get_absolute_time();    
+    uint64_t t_mult = to_us_since_boot(t6-t5);
+    t_mult = t_mult * 150 / 1000;
+    printf("t mult = %llu\n", t_mult);
 
+    absolute_time_t t7 = get_absolute_time();    
     for (int i = 0; i < 1000; i++){
-        f_div = f1/f2;
+        f_div = f1 / f2;
     }
-    t2 = get_absolute_time();    
-    t = to_us_since_boot(t2 - t1);
-    t = t * 150 / 1000;
-    printf("t div = %llu\n", t);
+    absolute_time_t t8 = get_absolute_time();    
+    uint64_t t_div = to_us_since_boot(t8-t7);
+    t_div = t_div * 150 / 1000;
+    printf("t div = %llu\n", t_div);
+
     printf("\nResults: \n%f+%f=%f \n%f-%f=%f \n%f*%f=%f \n%f/%f=%f\n", f1,f2,f_add, f1,f2,f_sub, f1,f2,f_mult, f1,f2,f_div);
-
+    }
     /*
     while(1){
         
