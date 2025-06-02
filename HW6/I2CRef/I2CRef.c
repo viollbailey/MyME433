@@ -38,20 +38,26 @@ int main()
     gpio_pull_up(I2C_SCL);
     // For more examples of I2C use see https://github.com/raspberrypi/pico-examples/tree/master/i2c
 
-
     unsigned char address = CHIP_ADDRESS;
-    chip_init(address); // Setting up our GP7 as output and GP0 as input
+    chip_init(CHIP_ADDRESS); // Setting up our GP7 as output and GP0 as inputs and initializing the OLATS
     // Also setting everything else to input just cause
 
     while (true) {
         gpio_put(HEARTBEAT, 1); // Turns the LED on
         sleep_ms(500);
         gpio_put(HEARTBEAT, 0); // Turns the LED off;
-        /*
-        if (!(readPin() & 0b00000001)){ // Looking at the OLAT for
+        sleep_ms(500);
 
+        unsigned char pinval = readPin(CHIP_ADDRESS, 0x09); // Just to save the GPIO register on the cycle
+        if ((pinval & 0b1) != 0b1){ // if the pin is low from pushing the button
+
+            setPin(CHIP_ADDRESS, 0x0A, 0b10000000 | pinval); // Turn on LED on GP07 in OLAT
+            // I think messing with the OLAT is bad so I'm or'ing it with the pinval too
         }
-        */
+        else{
+            setPin(CHIP_ADDRESS, 0x0A, 0b00000000); // Turn off LED on GP07 in OLAT
+        }
+
     }
     return 0;
 }
@@ -78,6 +84,6 @@ void chip_init(unsigned char address){
     // IODIR register is 0x00
     // Set GP7 to output with 0, everything else can be input with 1
     setPin(address, 0x0A, 0b00000000);
-    // Setting the OLAT (register 0x0A) to be low by default
+    // Setting the OLAT (register 0x0A) to turn all pins off by default
 }
 
