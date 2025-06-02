@@ -23,12 +23,13 @@
 #define SSD1306_SETSTARTLINE        0x40 
 #define SSD1306_DEACTIVATE_SCROLL   0x2E ///< Stop scroll
 
-void ssd1306_setup(void);
-void ssd1306_update(void);
-void ssd1306_clear(void);
+void ssd1306_setup(void); // initialize
+void ssd1306_update(void); // actually pushes the settings to the screen
+void ssd1306_clear(void); // sets the screen to clear
 void ssd1306_drawPixel(unsigned char x, unsigned char y, unsigned char color);
+// draws stuff
 
-/// this should be private
+/// this should be private. never need to call this directly
 void ssd1306_command(unsigned char c);
 
 #endif

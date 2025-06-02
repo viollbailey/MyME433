@@ -35,7 +35,7 @@ pico_sdk_init()
 
 # Add executable. Default name is the project name, version 0.1
 
-add_executable(OLED OLED.c )
+add_executable(OLED OLED.c ssd1306.c)
 
 pico_set_program_name(OLED "OLED")
 pico_set_program_version(OLED "0.1")
@@ -56,6 +56,8 @@ target_include_directories(OLED PRIVATE
 # Add any user requested libraries
 target_link_libraries(OLED 
         hardware_i2c
+        hardware_adc
+        hardware_gpio
         )
 
 pico_add_extra_outputs(OLED)
