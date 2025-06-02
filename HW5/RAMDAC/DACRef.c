@@ -5,7 +5,7 @@
 #include "hardware/spi.h"
 #include "math.h"
 
-#define RAMCS 14 // Setting the CS pin for the RAM
+#define RAMCS 10 // Setting the CS pin for the RAM
 
 
 void writeDAC(int, float); // channel, voltage
@@ -43,7 +43,7 @@ int main()
 #else
    
     // Initializing the SPI
-    spi_init(spi_default, 12000); // the baud, or bits per second. Want it to be slow for debugging
+    spi_init(spi_default, 50000); // the baud, or bits per second. Want it to be slow for debugging
                                     // 12kHz = slow
                                     // Maximum is bandwidth of nScope (100kHz)
     gpio_set_function(PICO_DEFAULT_SPI_RX_PIN, GPIO_FUNC_SPI);
@@ -59,35 +59,59 @@ int main()
     //set up the RAM CS pin
     gpio_init(RAMCS);
     gpio_put(RAMCS, 1);
-    gpio_set_dir(RAMCS, GPIO_OUT);
+    gpio_set_dir(RAMCS, GPIO_OUT); 
    
 
-    spi_ram_init(); // Initialize the ram in the write mode
+    spi_ram_init(); // Initialize the ram in the right mode
 
     // for doing waves
     float t = 0; // Time tracker for sine wave
-    // int x = 0; // Cycle tracker for triangle wave; not using right now
     float v1 = 0; // Voltage tracker for sine wave
-    // float v2 = 0; // Voltage tracker triangle wave; Not using this here right now
+    float v2 = 0; // Tracking output
+    uint16_t address = 0;
 
     // For loading the RAM with the sin wave
     for(int i = 0; i < 1000; i++){
-        uint16_t address = 0 + i;// Not quite sure about what address to use, I'm just gonna use 0 as the starting point
+        address = 50 * i;// Not quite sure about what address to use, I'm just gonna use 0 as the starting point
+
+
         v1 = sin(M_PI * 2 * t); // Loops once a second for 1 hz sine wave
         v1 = 1023 * (v1 + 1) / 2; // changes the -1 to 1 sin wave to a sin wave going from 0 to 1023
 
-        t = t + 0.001; //Increment time by 1ms for the next loop   
+        t = t + 0.001; //Increment time by 10ms for the next loop   
         spi_ram_write(address, v1); // Write v to the RAM
+        printf("I tried to write %.2f to the RAM\n", v1);
+        v2 = spi_ram_read(address);
+        printf("The RAM stored %.2f\n", v2);
+        sleep_ms(10);
     }
 
     while (1){
+        // printf("I tried to write to the DAC");
+        /*
         t = 0;
-        for(int i = 0; i < 1000; i++){
-            uint16_t address = 0 + i; // Just the same start as the last one
-            v1 = spi_ram_read(address); // Read from RAM at the address
-            writeDAC(0,v1); // Write to the DAC
-            sleep_ms(1); //delay 1ms for the next thing
+        for(int i = 0; i < 100; i++){
+            address = i;// Not quite sure about what address to use, I'm just gonna use 0 as the starting point
+            v1 = sin(M_PI * 2 * t); // Loops once a second for 1 hz sine wave
+            v1 = 1023 * (v1 + 1) / 2; // changes the -1 to 1 sin wave to a sin wave going from 0 to 1023
+    
+            t = t + 0.01; //Increment time by 1ms for the next loop   
+            // spi_ram_write(address, v1); // Write v to the RAM
+            printf("I wrote %.2f to the RAM\n", v1);
+            v2 = spi_ram_read(address);
+            printf("I'm reading %.2f\n", v2);
+            sleep_ms(10);
         }
+        */
+        for(int i = 0; i < 1000; i++){
+            address = 50 * i; // Just the same start as the last one
+            v2 = spi_ram_read(address); // Read from RAM at the address
+            writeDAC(0,v2); // Write to the DAC
+            sleep_ms(1); //delay 1ms for the next thing
+            // This still ends up being way slower than it's supposed to be but it worked! Yay
+        }
+        
+        // printf("I did write to the DAC");
     }
 
     /* This is all the code for communicating with the DAC, we'll just do this later
@@ -130,7 +154,7 @@ void spi_ram_init(){
     buf[0] = 0b00000001; //command. We want to write to the status
     buf[1] = 0b01000000; //value. We want to use use 01 for the sequential mode
     
-    cs_deselect(RAMCS); // Makes the chip select pin go high, disabling it
+    cs_select(RAMCS); // Makes the chip select pin go high, disabling it
     spi_write_blocking(spi_default, buf, 2);
     cs_deselect(RAMCS); // Makes the chip select pin go high, disabling it
 }
@@ -145,10 +169,10 @@ void spi_ram_write(uint16_t addr, float v){
     union FloatInt num;
     num.f = v;
 
-    buf[3] = num.i >> 24; // float high 8 bits
-    buf[4] = (num.i >> 16)& 0b11111111; // float mid high8 bits
-    buf[5] = (num.i >> 8) & 0b11111111; // float mid low 8 bits
-    buf[6] = num.i & 0b11111111; // float low 8 bits
+    buf[3] = (num.i >> 24); // float high 8 bits
+    buf[4] = (num.i >> 16)& 0xff; // float mid high8 bits
+    buf[5] = (num.i >> 8) & 0xff; // float mid low 8 bits
+    buf[6] = num.i & 0xff; // float low 8 bits
 
     cs_select(RAMCS); //Makes the chip select pin go low, activating it
     spi_write_blocking(spi_default, buf, 7);
@@ -164,7 +188,7 @@ float spi_ram_read(uint16_t addr){
     write[2] = addr & 0xff;//address low byte
 
     cs_select(RAMCS); //Makes the chip select pin go low, activating it
-    spi_write_read_blocking(spi_default, write, read, 2);
+    spi_write_read_blocking(spi_default, write, read, 7);
     cs_deselect(RAMCS); // Makes the chip select pin go high, disabling it
 
     //read[0] up to read[2] is just nonsense
