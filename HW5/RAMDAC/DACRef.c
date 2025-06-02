@@ -5,7 +5,19 @@
 #include "hardware/spi.h"
 #include "math.h"
 
+#define RAMCS 14 // Setting the CS pin for the RAM
+
+
 void writeDAC(int, float); // channel, voltage
+void spi_ram_init();
+float spi_ram_read(uint16_t address);
+
+
+union FloatInt {
+    float f;
+    uint32_t i;
+};
+
 
 static inline void cs_select(uint cs_pin) { // inline forces the program to copy and paste the function, speeding up at cost of memory
     asm volatile("nop \n nop \n nop"); // Assembly code to skip clock cycles, keeps us from flipping the pin too quickly
@@ -42,58 +54,27 @@ int main()
     gpio_init(PICO_DEFAULT_SPI_CSN_PIN);
     gpio_put(PICO_DEFAULT_SPI_CSN_PIN, 1);
     gpio_set_dir(PICO_DEFAULT_SPI_CSN_PIN, GPIO_OUT);
+
+    //set up the RAM CS pin
+    gpio_init(RAMCS);
+    gpio_put(RAMCS, 1);
+    gpio_set_dir(RAMCS, GPIO_OUT);
    
 
-    /* for doing waves
+    spi_ram_init();
+    for(i = 0; i < 1000; i++){
+        //calculate sine
+        //write v to ram
+    }
+
+    // for doing waves
     float t = 0; // Time tracker for sine wave
     int x = 0; // Cycle tracker for triangle wave
     float v1 = 0; // Voltage tracker for sine wave
     float v2 = 0; // Voltage tracker triangle wave;
-    */
 
-    //testing clock timing
     while (1){
-    volatile float f1, f2;
-    printf("Enter two floats to use:");
-    scanf("%f %f", &f1, &f2);
-    volatile float f_add, f_sub, f_mult, f_div;
-    absolute_time_t t1 = get_absolute_time();    
-    for (int i = 0; i < 1000; i++){
-        f_add = f1+f2;
-    }
-    absolute_time_t t2 = get_absolute_time();    
-    uint64_t t_add = to_us_since_boot(t2-t1);
-    t_add = t_add * 150 / 1000;
-    printf("t add = %llu\n", t_add);
-
-    absolute_time_t t3 = get_absolute_time();    
-    for (int i = 0; i < 1000; i++){
-        f_sub = f1-f2;
-    }
-    absolute_time_t t4 = get_absolute_time();    
-    uint64_t t_sub = to_us_since_boot(t4-t3);
-    t_sub = t_sub * 150 / 1000;
-    printf("t sub = %llu\n", t_sub);
-
-    absolute_time_t t5 = get_absolute_time();    
-    for (int i = 0; i < 1000; i++){
-        f_add = f1 * f2;
-    }
-    absolute_time_t t6 = get_absolute_time();    
-    uint64_t t_mult = to_us_since_boot(t6-t5);
-    t_mult = t_mult * 150 / 1000;
-    printf("t mult = %llu\n", t_mult);
-
-    absolute_time_t t7 = get_absolute_time();    
-    for (int i = 0; i < 1000; i++){
-        f_div = f1 / f2;
-    }
-    absolute_time_t t8 = get_absolute_time();    
-    uint64_t t_div = to_us_since_boot(t8-t7);
-    t_div = t_div * 150 / 1000;
-    printf("t div = %llu\n", t_div);
-
-    printf("\nResults: \n%f+%f=%f \n%f-%f=%f \n%f*%f=%f \n%f/%f=%f\n", f1,f2,f_add, f1,f2,f_sub, f1,f2,f_mult, f1,f2,f_div);
+        v1 = spi_ram_read()//address); // use v to send to the DAC
     }
     /*
     while(1){
@@ -130,6 +111,50 @@ int main()
 #endif
 }
 
+void spi_ram_init(){
+    uint8_t buf[2];
+    buf[0] = 0b00000001; //command. We want to write to the status
+    buf[1] = 0b01000000; //value. We want to use use 01 for the sequential mode
+    spi_write_blocking(spi_default, buf, 2);
+}
+
+void spi_ram_write(uint16_t addr, float v){
+    uint8_t buf[7];
+    buf[0] = 0b00000010; //command. We want to do normal writing
+    buf[1] = addr >> 8; //Address high 8 bits
+    buf[2] = addr & 0xff; // Address low 8 bits 
+
+    // Use our union to do let us bitshift the float
+    union FloatInt num;
+    num.f = v;
+
+    buf[3] = num.i >> 24; // float high 8 bits
+    buf[4] = (num.i >> 16)& 0b11111111; // float mid high8 bits
+    buf[5] = (num.i >> 8) & 0b11111111; // float mid low 8 bits
+    buf[6] = num.i & 0b11111111; // float low 8 bits
+    spi_write_blocking(spi_default, buf, 7);
+}
+
+float spi_ram_read(uint16_t addr){
+    
+    //We have to use a slightly inefficient write_read function
+    uint8_t write[7], read[7];
+    write[0] = 0b00000011; //instruction to read
+    write[1] = addr >> 8;//address high byte
+    write[2] = addr & 0xff;//address low byte
+    spi_write_read_blocking(spi_default, write, read, 2);
+
+    //read[0] up to read[2] is just nonsense
+    //actual floats go here
+    union FloatInt num;
+    num.i = num.i | read[3] << 24;
+    num.i = num.i | read[4] << 16;
+    num.i = num.i | read[5] << 8;
+    num.i = num.i | read[6];
+
+    return num.f;
+
+}
 
 void writeDAC(int channel, float voltage){
     uint8_t data[2];
