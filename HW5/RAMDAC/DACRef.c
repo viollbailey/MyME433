@@ -77,7 +77,6 @@ int main()
         v1 = 1023 * (v1 + 1) / 2; // changes the -1 to 1 sin wave to a sin wave going from 0 to 1023
 
         t = t + 0.001; //Increment time by 1ms for the next loop   
-    
         spi_ram_write(address, v1); // Write v to the RAM
     }
 
