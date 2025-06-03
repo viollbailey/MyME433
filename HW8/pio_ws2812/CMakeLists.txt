@@ -37,7 +37,7 @@ pico_sdk_init()
 
 add_executable(pio_ws2812)
 
-pico_enable_stdio_usb(I2CRef 1) # enable the USB troubleshooting
+pico_enable_stdio_usb(pio_ws2812 1) # enable the USB troubleshooting
 
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/generated)
 
@@ -46,7 +46,7 @@ pico_generate_pio_header(pio_ws2812 ${CMAKE_CURRENT_LIST_DIR}/ws2812.pio OUTPUT_
 
 target_sources(pio_ws2812 PRIVATE ws2812.c)
 
-target_link_libraries(pio_ws2812 PRIVATE pico_stdlib hardware_pio)
+target_link_libraries(pio_ws2812 PRIVATE pico_stdlib hardware_pio hardware_pwm)
 pico_add_extra_outputs(pio_ws2812)
 
 # add url via pico_set_program_url
@@ -61,7 +61,7 @@ target_sources(pio_ws2812_parallel PRIVATE ws2812_parallel.c)
 target_compile_definitions(pio_ws2812_parallel PRIVATE
         PIN_DBG1=3)
 
-target_link_libraries(pio_ws2812_parallel PRIVATE pico_stdlib hardware_pio hardware_dma)
+target_link_libraries(pio_ws2812_parallel PRIVATE pico_stdlib hardware_pio hardware_dma hardware_pwm)
 pico_add_extra_outputs(pio_ws2812_parallel)
 
 # add url via pico_set_program_url

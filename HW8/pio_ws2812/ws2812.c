@@ -12,6 +12,8 @@
 #include "hardware/clocks.h"
 #include "ws2812.pio.h"
 
+#include "hardware/pwm.h"
+
 /**
  * NOTE:
  *  Take into consideration if your WS2812 is a RGB or RGBW variant.
@@ -26,7 +28,9 @@
  *
  */
 #define IS_RGBW false
-#define NUM_PIXELS 150
+#define NUM_PIXELS 4
+
+#define PWMPin 16 // define the PWM pin for the RC motor to 16
 
 #ifdef PICO_DEFAULT_WS2812_PIN
 #define WS2812_PIN PICO_DEFAULT_WS2812_PIN
@@ -46,8 +50,8 @@ static inline void put_pixel(PIO pio, uint sm, uint32_t pixel_grb) {
 
 static inline uint32_t urgb_u32(uint8_t r, uint8_t g, uint8_t b) {
     return
-            ((uint32_t) (r) << 8) |
-            ((uint32_t) (g) << 16) |
+            ((uint32_t) (r) << 16) |
+            ((uint32_t) (g) << 8) |
             (uint32_t) (b);
 }
 
@@ -107,11 +111,108 @@ const struct {
         {pattern_greys,   "Greys"},
 };
 
+// link three 8bit colors together to store RGB
+typedef struct {
+    unsigned char r;
+    unsigned char g;
+    unsigned char b;
+} wsColor; 
+
+// adapted from https://forum.arduino.cc/index.php?topic=8498.0
+// hue is a number from 0 to 360 that describes a color on the color wheel
+// sat is the saturation level, from 0 to 1, where 1 is full color and 0 is gray
+// brightness sets the maximum brightness, from 0 to 1
+wsColor HSBtoRGB(float hue, float sat, float brightness) {
+    float red = 0.0;
+    float green = 0.0;
+    float blue = 0.0;
+
+    if (sat == 0.0) {
+        red = brightness;
+        green = brightness;
+        blue = brightness;
+    } else {
+        if (hue == 360.0) {
+            hue = 0;
+        }
+
+        int slice = hue / 60.0;
+        float hue_frac = (hue / 60.0) - slice;
+
+        float aa = brightness * (1.0 - sat);
+        float bb = brightness * (1.0 - sat * hue_frac);
+        float cc = brightness * (1.0 - sat * (1.0 - hue_frac));
+
+        switch (slice) {
+            case 0:
+                red = brightness;
+                green = cc;
+                blue = aa;
+                break;
+            case 1:
+                red = bb;
+                green = brightness;
+                blue = aa;
+                break;
+            case 2:
+                red = aa;
+                green = brightness;
+                blue = cc;
+                break;
+            case 3:
+                red = aa;
+                green = bb;
+                blue = brightness;
+                break;
+            case 4:
+                red = cc;
+                green = aa;
+                blue = brightness;
+                break;
+            case 5:
+                red = brightness;
+                green = aa;
+                blue = bb;
+                break;
+            default:
+                red = 0.0;
+                green = 0.0;
+                blue = 0.0;
+                break;
+        }
+    }
+
+    unsigned char ired = red * 255.0;
+    unsigned char igreen = green * 255.0;
+    unsigned char iblue = blue * 255.0;
+
+    wsColor c;
+    c.r = ired;
+    c.g = igreen;
+    c.b = iblue;
+    return c;
+}
+
 int main() {
     //set_sys_clock_48();
     stdio_init_all();
     printf("WS2812 Smoke Test, using pin %d\n", WS2812_PIN);
 
+
+    // Setting up PWM control for the RC motor
+    gpio_set_function(PWMPin, GPIO_FUNC_PWM); // Set the LED Pin to be PWM
+    uint slice_num = pwm_gpio_to_slice_num(PWMPin); // Get PWM slice number
+    float div = 50; // must be between 1-255
+    pwm_set_clkdiv(slice_num, div); // divider set
+    uint16_t wrap = 60000; // when to rollover, must be less than 65535
+    // Sys clock is 150MHz, so PWM freq = 150 MHz / wrap / divider
+    // in our case we want a 50Hz PWM signal for the servo so 150 MHz/ (50 * 60000) = 50
+    pwm_set_wrap(slice_num, wrap);
+    pwm_set_enabled(slice_num, true); // turn on the PWM
+  
+    pwm_set_gpio_level(PWMPin, wrap / 40); // Set duty cycle as percentage of the wrap
+    //Duty cycle needs to be between 2.5% and 12.5% for the servo
+    
     // todo get free sm
     PIO pio;
     uint sm;
@@ -125,6 +226,9 @@ int main() {
 
     ws2812_program_init(pio, sm, offset, WS2812_PIN, 800000, IS_RGBW);
 
+
+    // The basic example code
+    /*
     int t = 0;
     while (1) {
         int pat = rand() % count_of(pattern_table);
@@ -137,7 +241,38 @@ int main() {
             t += dir;
         }
     }
+    */
+
+    while (1){
+        
+        int t;
+        for (t = 0; t < 360; t++){
+            uint16_t dutycycle = (wrap / 40) + t * ((wrap / 8) - (wrap / 40)) / 360;
+            pwm_set_gpio_level(PWMPin, dutycycle);
+        
+            wsColor px1 = HSBtoRGB(t, 1, 0.8);
+            wsColor px2 = HSBtoRGB((t + 360 / 4) % 360, 1, 0.8);
+            wsColor px3 = HSBtoRGB((t + 360 / 2) % 360, 1, 0.8);
+            wsColor px4 = HSBtoRGB((t + 3 * 360 / 4) % 360, 1, 0.8);
+
+            put_pixel(pio, sm, urgb_u32(px1.r, px1.g, px1.b));
+            put_pixel(pio, sm, urgb_u32(px2.r, px2.g, px2.b));
+            put_pixel(pio, sm, urgb_u32(px3.r, px3.g, px3.b));
+            put_pixel(pio, sm, urgb_u32(px4.r, px4.g, px4.b));
+
+            /* I don't feel like bothering to resort the array junk
+            int i;
+            for(i=0;i<NUM_PIXELS;i++){
+                put_pixel(pio, sm, urgb_u32(r[i], g[i], b[i])); // assuming you've made arrays of colors to send
+            }
+            */
+            sleep_ms(5000 / 360); // 5 seconds for a full cycle
+        }
+    }
 
     // This will free resources and unload our program
     pio_remove_program_and_unclaim_sm(&ws2812_program, pio, sm, offset);
+
+    
+   return 0;
 }
