@@ -43,12 +43,14 @@ add_executable(hello_multicore
         multicore.c
         )
 
-pico_enable_stdio_usb(hello_multicore 1);
+pico_enable_stdio_usb(hello_multicore 1)
 
 # Add pico_multicore which is required for multicore functionality
 target_link_libraries(hello_multicore
         pico_stdlib
-        pico_multicore)
+        pico_multicore
+        hardware_adc
+        hardware_gpio)
 
 # create map/bin/hex file etc.
 pico_add_extra_outputs(hello_multicore)

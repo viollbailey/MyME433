@@ -51,9 +51,10 @@ int main()
     int sampleNumber = 0;
     float voltValue = 0;
 
-    while (true) {
+    while (1) {
         printf("Enter a number of analog samples to take (between 1 and 100):\n");
         scanf("%d", &sampleNumber);
+
         printf("%d\n", sampleNumber);
         for (int i = 0; i < sampleNumber; i++){
             uint16_t result = adc_read(); // Reading ADC as 12 bit number
