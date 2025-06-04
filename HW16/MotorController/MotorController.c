@@ -8,8 +8,10 @@
 #include "hardware/pio.h"
 #include "hardware/dma.h"
 #include "hardware/irq.h"
-#include "ws2812.pio.h"
 #include "hardware/adc.h"
+#include "hardware/pwm.h"
+#include "hardware/clocks.h"
+
 
 //defining the motor pins
 #define LEFTMOTOR_PWM 18
@@ -17,14 +19,27 @@
 #define RIGHTMOTOR_PWM 20
 #define RIGHTMOTOR_PHASE 21
 
-static int LeftDuty = 0;
+static int LeftDuty = 0; // Just defining duty cycle up here cause it's easier
 static int RightDuty = 0;
+/*
+Note that the robot motors will only definitely start turning at 40%
+Didn't test exactly when they stop, but probably don't go below 20% if
+we want them to keep going
+*/
+
+
+
+// I wanna clean up the main function a bit so UNFORTUNATELY I'm gonna be making other
+// functions.
+// I'm still gonna initialize in the main though just cause it's easier to me
+
+void set_motors(uint16_t wrap);
 
 int main()
 {
     stdio_init_all();
 
-    /* PWM controls
+    /* PWM controls (Keep commented out)
     // Setting up PWM control for the RC motor
     gpio_set_function(PWMPin, GPIO_FUNC_PWM); // Set the LED Pin to be PWM
     uint slice_num = pwm_gpio_to_slice_num(PWMPin); // Get PWM slice number
@@ -40,7 +55,7 @@ int main()
     //Duty cycle needs to be between 2.5% and 12.5% for the servo
     */
 
-   /* Phase controls
+   /* Phase controls (Keep commented out)
     gpio_init(LEDOUTPIN_NUM);
     gpio_set_dir(LEDOUTPIN_NUM, GPIO_OUT);
     gpio_put(PIN_NUM, 1); for output pin on
@@ -78,29 +93,17 @@ int main()
     printf("Hello, Motors!\n");
 
     while(1){
+        
+        // Communicating with the computer
         printf("Current Duty Cycle\n");
         printf("Left Duty: %d\n", LeftDuty);
         printf("Right Duty: %d\n", RightDuty);
 
         printf("Enter Values (L_PWM R_PWM)");
         scanf("%d %d", &LeftDuty, &RightDuty);
+        
 
-        if (LeftDuty < 0){
-            pwm_set_gpio_level(LEFTMOTOR_PWM, wrap * (-LeftDuty) / 100); // Set duty cycle as percentage of the wrap
-            gpio_put(LEFTMOTOR_PHASE, 0);
-        }
-        else {
-            pwm_set_gpio_level(LEFTMOTOR_PWM, wrap * LeftDuty / 100); 
-            gpio_put(LEFTMOTOR_PHASE, 1);
-        }
-        if (RightDuty < 0){
-            pwm_set_gpio_level(RIGHTMOTOR_PWM, wrap * (-RightDuty) / 100); 
-            gpio_put(RIGHTMOTOR_PHASE, 1);
-        }
-        else {
-            pwm_set_gpio_level(RIGHTMOTOR_PWM, wrap * RightDuty / 100); 
-            gpio_put(RIGHTMOTOR_PHASE, 0);
-        }
+        set_motors(wrap);
 
     }
     /* ADC stff
@@ -112,4 +115,24 @@ int main()
 
 
     return 0;
+}
+
+void set_motors(uint16_t wrap){
+
+    if (LeftDuty < 0){
+        pwm_set_gpio_level(LEFTMOTOR_PWM, wrap * (-LeftDuty) / 100); // Set duty cycle as percentage of the wrap
+        gpio_put(LEFTMOTOR_PHASE, 1);
+    }
+    else {
+        pwm_set_gpio_level(LEFTMOTOR_PWM, wrap * LeftDuty / 100); 
+        gpio_put(LEFTMOTOR_PHASE, 0);
+    }
+    if (RightDuty < 0){
+        pwm_set_gpio_level(RIGHTMOTOR_PWM, wrap * (-RightDuty) / 100); 
+        gpio_put(RIGHTMOTOR_PHASE, 1);
+    }
+    else {
+        pwm_set_gpio_level(RIGHTMOTOR_PWM, wrap * RightDuty / 100); 
+        gpio_put(RIGHTMOTOR_PHASE, 0);
+    }
 }
