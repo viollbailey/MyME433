@@ -5,11 +5,13 @@
 
 
 import matplotlib.pyplot as plt 
-
+import time
 import serial
 ser = serial.Serial('/dev/tty.usbmodem11201')
 print('Opening port: ')
-print(ser.name)
+print(str(ser.name))
+time.sleep(5)
+
 
 import numpy as np
 from PIL import Image

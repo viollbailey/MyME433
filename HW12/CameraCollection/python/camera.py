@@ -1,9 +1,9 @@
 import pgzrun # pip install pgzero
-
+import time
 import serial
 ser = serial.Serial('/dev/tty.usbmodem11201') # the name of your port here
 print('Opening port: ' + str(ser.name))
-
+time.sleep(5)
 import numpy as np
 
 # Set the window size
