@@ -94,7 +94,7 @@ int main()
             gpio_put(LEFTMOTOR_PHASE, 1);
         }
         if (RightDuty < 0){
-            pwm_set_gpio_level(RIGHTMOTOR_PWM, wrap * RightDuty / 100); 
+            pwm_set_gpio_level(RIGHTMOTOR_PWM, wrap * (-RightDuty) / 100); 
             gpio_put(RIGHTMOTOR_PHASE, 1);
         }
         else {
