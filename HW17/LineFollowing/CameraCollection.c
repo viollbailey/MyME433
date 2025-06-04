@@ -1,5 +1,17 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include "math.h"
+
 #include "pico/stdlib.h"
+#include "pico/sem.h"
+#include "hardware/pio.h"
+#include "hardware/dma.h"
+#include "hardware/irq.h"
+#include "hardware/adc.h"
+#include "hardware/pwm.h"
+#include "hardware/clocks.h"
+
 #include "cam.h"
 
 int main()
