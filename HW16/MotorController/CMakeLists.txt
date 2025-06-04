@@ -52,6 +52,7 @@ target_link_libraries(MotorController
         hardware_i2c
         hardware_gpio
         hardware_dma
+        hardware_adc
         )
 
 # Add the standard include files to the build
