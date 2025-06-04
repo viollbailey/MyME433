@@ -27,16 +27,22 @@ int main()
  
     while (true) {
         // uncomment these and printImage() when testing with python 
-        char m[10]; //Python testing
-        scanf("%s",m); //Python testing
+        // char m[10]; //Python testing
+        // scanf("%s",m); //Python testing
 
         setSaveImage(1);
         while(getSaveImage()==1){}
         convertImage();
-        int com = findLine(IMAGESIZEY/2); // calculate the position of the center of the ine
-        setPixel(IMAGESIZEY/2,com,0,255,0); // draw the center so you can see it in python
-        printImage(); // PythonTesting
-        //printf("%d\r\n",com); // comment this when testing with python
+        int com_lower = findLine(9 * IMAGESIZEY/10); // calculate the position of the center of the ine
+        int com_upper = findLine(IMAGESIZEY/10); // calculate the position of the center of the ine
+
+        // For testing with python or screen
+        // setPixel(IMAGESIZEY/2,com,0,255,0); // draw the center so you can see it in python
+        // Not necessary if not testing it with python, but then we need to add some delay
+        sleep_ms(50);
+
+        // printImage(); // PythonTesting (Comment if not using python)
+        printf("%d %d\r\n",com_lower, com_upper); // comment this when testing with python
     }
 }
 

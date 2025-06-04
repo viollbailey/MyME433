@@ -315,30 +315,36 @@ int findLine(int row){
     // find the row average brightness
     int sumBright = 0;
     for(i=0;i<IMAGESIZEX;i++){
-        sumBright = sumBright + picture.r[r+i] + picture.g[r+i] + picture.b[r+i];
+        // sumBright = sumBright + picture.r[r+i] + picture.g[r+i] + picture.b[r+i];
+        sumBright = sumBright + picture.g[r+i];
     }
     int avgBright = sumBright / IMAGESIZEX;
 
     // threshold the row
     for(i=0;i<IMAGESIZEX;i++){
-        int mass = picture.r[r+i] + picture.g[r+i] + picture.b[r+i];
+        // int mass = picture.r[r+i] + picture.g[r+i] + picture.b[r+i];
+        int mass = picture.g[r+i];
+
         if (mass < avgBright){
             // not bright enough, set pixel to black
-            picture.r[r+i] = 0;
+
+            // Just gonna look at green for us
+            //picture.r[r+i] = 0;
             picture.g[r+i] = 0;
-            picture.b[r+i] = 0;
+            //picture.b[r+i] = 0;
         }
         else {
             // set to white
-            picture.r[r+i] = 255;
+            // picture.r[r+i] = 255;
             picture.g[r+i] = 255;
-            picture.b[r+i] = 255;
+            // picture.b[r+i] = 255;
         }
     }
 
     // calculate the center of mass of the thresholded row
     for(i=0;i<IMAGESIZEX;i++){
-        int mass = picture.r[r+i] + picture.g[r+i] + picture.b[r+i];
+        // int mass = picture.r[r+i] + picture.g[r+i] + picture.b[r+i];
+        int mass = picture.g[r+i];
         sumMass = sumMass + mass;
         sumMassR = sumMassR + mass*i;
     }
