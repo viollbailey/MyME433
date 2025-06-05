@@ -23,10 +23,8 @@
 static float LeftDuty = 40; // Just defining duty cycle up here cause it's easier
 static float RightDuty = 40; // 0 = 0%, 100 = 100%
 
-static float min_forward_speed = 40; // Minimum duty cycle ONCE IN MOTION (starting min is 40)
-static float max_forward_speed = 60; // Uck
-static float min_backward_speed = 50; // Minimum duty cycle ONCE IN MOTION (starting min is 40)
-static float max_backward_speed = 50; // Uck
+static float min_speed = 20; // Minimum duty cycle ONCE IN MOTION (starting min is 40)
+static float max_speed = 60; // Uck
 #define ERROR_MARGIN 15
 #define DEADZONE 5
 
@@ -75,12 +73,12 @@ int main()
 
     // Wait until the screen program is open
     
-    /*
+    
     while (!stdio_usb_connected()) {
         sleep_ms(100);
     }
     printf("Hello, Robot!\n");
-    */
+    
     
 
     init_camera_pins();
@@ -106,8 +104,8 @@ int main()
         setSaveImage(1);
         while(getSaveImage()==1){}
         convertImage();
-        int com_lower = (findLine(3 * IMAGESIZEY/4) - 35); // calculate the position of the center of the line
-        int com_upper = (findLine(1 * IMAGESIZEY/4) - 35); // calculate the position of the center of the line
+        int com_lower = (findLine(3 * IMAGESIZEY/4) - 40); // calculate the position of the center of the line
+        int com_upper = (findLine(1 * IMAGESIZEY/4) - 40); // calculate the position of the center of the line
         // int com_middle = findLine(IMAGESIZEY/2); // calculate the position of the center of the line
         
         /*
@@ -123,7 +121,7 @@ int main()
         // sleep_ms(50);
         // printImage(); // PythonTesting (Comment if not using python)
 
-        float turn_speed = 50;
+        float turn_speed = min_speed;
 
         // Version with the upper and lower
         float com_dir = com_upper - com_lower; // >0 means right, <0 means left
@@ -132,23 +130,23 @@ int main()
             mode = 1;
             if (com_dir < 0){
                 if (-com_dir > ERROR_MARGIN){
-                    RightDuty = max_forward_speed;
-                    LeftDuty = -max_backward_speed;
+                    RightDuty = max_speed;
+                    LeftDuty = -max_speed;
                 }
                 else{
-                    turn_speed = (min_backward_speed + (max_backward_speed - min_backward_speed) * ((-(com_dir + DEADZONE)) / (ERROR_MARGIN - DEADZONE)));
-                    RightDuty = max_forward_speed;
+                    turn_speed = (min_speed + (max_speed - min_speed) * ((-(com_dir + DEADZONE)) / (ERROR_MARGIN - DEADZONE)));
+                    RightDuty = max_speed;
                     LeftDuty = -turn_speed;                
                 }
             }
             if (com_dir > 0){
                 if (com_dir > ERROR_MARGIN){
-                    LeftDuty = max_forward_speed;
-                    RightDuty = -max_backward_speed;
+                    LeftDuty = max_speed;
+                    RightDuty = -max_speed;
                 }
                 else{
-                    turn_speed = (min_backward_speed + (max_backward_speed - min_backward_speed) * ((com_dir - DEADZONE) / (ERROR_MARGIN - DEADZONE)));
-                    LeftDuty = max_forward_speed;
+                    turn_speed = (min_speed + (max_speed - min_speed) * ((com_dir - DEADZONE) / (ERROR_MARGIN - DEADZONE)));
+                    LeftDuty = max_speed;
                     RightDuty = -turn_speed;     
                 }
             }
@@ -157,31 +155,31 @@ int main()
             mode = 2;
             if (com_avg < 0){
                 if ((-com_avg) > ERROR_MARGIN){
-                    RightDuty = max_forward_speed;
-                    LeftDuty = min_forward_speed;
+                    RightDuty = max_speed;
+                    LeftDuty = min_speed;
                 }
                 else{
-                    turn_speed = (max_forward_speed - (max_forward_speed - min_forward_speed) * ((DEADZONE - com_avg) / (ERROR_MARGIN + DEADZONE)));
-                    RightDuty = max_forward_speed;
+                    turn_speed = (max_speed - (max_speed - min_speed) * ((DEADZONE - com_avg) / (ERROR_MARGIN + DEADZONE)));
+                    RightDuty = max_speed;
                     LeftDuty = turn_speed;                
                 }
             }
             if (com_avg > 0){
                 if (com_avg > ERROR_MARGIN){
-                    LeftDuty = max_forward_speed;
-                    RightDuty = min_forward_speed;
+                    LeftDuty = max_speed;
+                    RightDuty = min_speed;
                 }
                 else{
-                    turn_speed = (max_forward_speed - (max_forward_speed - min_forward_speed) * ((com_avg - DEADZONE) / (ERROR_MARGIN + DEADZONE)));
-                    LeftDuty = min_forward_speed;
+                    turn_speed = (max_speed - (max_speed - min_speed) * ((com_avg - DEADZONE) / (ERROR_MARGIN + DEADZONE)));
+                    LeftDuty = max_speed;
                     RightDuty = turn_speed;     
                 }
             }
         }
         else {
             mode = 3;
-            LeftDuty = min_forward_speed;
-            RightDuty = min_forward_speed;
+            LeftDuty = max_speed;
+            RightDuty = max_speed;
         }
 
         // Version with just a middle one
@@ -224,16 +222,16 @@ int main()
         */
 
 
-        /*
+        
         printf("Line COMs (dir, avg): %0.1f %0.1f\r\n",com_dir, com_avg); // comment this when testing with python
         printf("Line COMS (lower, upper): %d %d\n", com_lower, com_upper);
         printf("Mode: %d\n", mode);
         printf("Current Duty Cycle\n");
         printf("Left Duty: %0.1f\n", LeftDuty);
         printf("Right Duty: %0.1f\n", RightDuty);
-        */
+        
 
-        set_motors(wrap);
+        //set_motors(wrap);
 
     }
 }
